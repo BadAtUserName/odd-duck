@@ -1,0 +1,22 @@
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  background-color: darkcyan;
+}
+
+h1 {
+  font-size: 3rem;
+}
+
+#image-container {
+  border: 30px;
+  display: flex;
+  justify-content: center;
+ height: min-content;
+}
+
+#image-container img {
+  width: 40%;
+  border: 40px;
+  margin: 40px;
+ max-height: 30rem;
+}
