@@ -12,6 +12,8 @@ let imageThree = document.getElementById('img-three');
 let showResultsButton = document.getElementById('show-results-button');
 let resultsList = document.getElementById('results-container');
 
+let ctx = document.getElementById('product-chart');
+
 //Constructor Function*****//
 function Product (name, imageExtension = 'jpg'){ // imageExtension makes it possible to not write whole file name
   this.name = name;
@@ -26,11 +28,31 @@ function randomIndexGenerator () {
   return Math.floor(Math.random() * productArray.length);
 }
 
+//two unique rounds of images
+let imagesToShow = []; //stores index we are using
+let priorImagesShown = [];
+
 function renderImages( ) {
+
+  //change length of index to hold whatever
+  while(imagesToShow.length < 3 ){ // less than the lenght of product name array? or less than 6? will need to change something else? how many images do you need for 25 rounds? 
+    let chosenIndex = randomIndexGenerator();
+    if (!imagesToShow.includes(chosenIndex) || !priorImagesShown.includes(chosenIndex)){
+      imagesToShow.push(chosenIndex);
+    }
+  }
+
+  priorImagesShown = [];
+  priorImagesShown.concat(imagesToShow);
+  
+  let imageOneIndex = imagesToShow.pop();
+  let imageTwoIndex = imagesToShow.pop();
+  let imageThreeIndex = imagesToShow.pop();
+
   // 3 random images on page #### 2 random images currently
-  let imageOneIndex = randomIndexGenerator();
-  let imageTwoIndex = randomIndexGenerator();
-  let imageThreeIndex = randomIndexGenerator();
+  //let imageOneIndex = randomIndexGenerator();
+  //let imageTwoIndex = randomIndexGenerator();
+  //let imageThreeIndex = randomIndexGenerator();
 
 //TODO make sure they are unique
   while(imageOneIndex === imageTwoIndex || imageOneIndex === imageThreeIndex || imageTwoIndex === imageThreeIndex) {
@@ -52,9 +74,50 @@ function renderImages( ) {
   productArray[imageOneIndex].views++;
   productArray[imageTwoIndex].views++;
   productArray[imageThreeIndex].views++;
-
 }
 
+function renderChart(){
+  let productNames = [];
+  let productViews = [];
+  let numberOfVotes = [];
+  
+  for(let i = 0; i < productArray.length; i++){
+    productNames.push(productArray[i].name); // drill into goat array and grab name
+    productViews.push(productArray[i].views);
+    numberOfVotes.push(productArray[i].votes);
+  }
+
+  let chartObj = {
+    type: 'bar',
+    data: {
+      labels: productNames,
+      datasets: [ {
+        label: 'Number of Views',
+        data: productViews,
+        borderWidth: 5,
+        backgroundColor: 'dark blue',
+        borderColor: 'dark blue'
+      },
+      {
+        label: 'Number of Votes',
+        data: numberOfVotes,
+        borderWidth: 5,
+        backgroundColor: 'light blue',
+        borderColor: 'light grey'
+      }
+      ]
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    }
+  };
+
+  new Chart(ctx, chartObj);
+}
 // Event Handlers********//
 function handleImageClick(event) {
 // todo identify the image that was clcked 
@@ -78,11 +141,7 @@ function handleImageClick(event) {
 //************************************EWWWWW REVIST THIS */
 function handleShowResults(){
   if(votingRounds === 0) {
-    for (let i = 0; i < productArray.length; i++) {
-      let productListItem = document.createElement('li');
-      productListItem.textContent = `${productArray[i].name} - Votes ${productArray[i].views}`;
-      resultsList.appendChild(productListItem);
-    }
+    renderChart();
     showResultsButton.removeEventListener('click', handleShowResults);
   }
 }
