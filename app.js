@@ -37,13 +37,14 @@ function renderImages( ) {
   //change length of index to hold whatever
   while(imagesToShow.length < 3 ){ // less than the lenght of product name array? or less than 6? will need to change something else? how many images do you need for 25 rounds? 
     let chosenIndex = randomIndexGenerator();
-    if (!imagesToShow.includes(chosenIndex) || !priorImagesShown.includes(chosenIndex)){
+    //checks if images already selected for this set are not in the prior set
+    if (!imagesToShow.includes(chosenIndex) &&  !priorImagesShown.includes(chosenIndex)){
       imagesToShow.push(chosenIndex);
     }
   }
 
   priorImagesShown = [];
-  priorImagesShown.concat(imagesToShow);
+  priorImagesShown = priorImagesShown.concat(imagesToShow);
   
   let imageOneIndex = imagesToShow.pop();
   let imageTwoIndex = imagesToShow.pop();
@@ -74,6 +75,8 @@ function renderImages( ) {
   productArray[imageOneIndex].views++;
   productArray[imageTwoIndex].views++;
   productArray[imageThreeIndex].views++;
+
+  imagesToShow = [];
 }
 
 function renderChart(){
@@ -95,15 +98,15 @@ function renderChart(){
         label: 'Number of Views',
         data: productViews,
         borderWidth: 5,
-        backgroundColor: 'dark blue',
-        borderColor: 'dark blue'
+        backgroundColor: '#CD5C5C',
+        borderColor: '#CD5C5C'
       },
       {
         label: 'Number of Votes',
         data: numberOfVotes,
         borderWidth: 5,
-        backgroundColor: 'light blue',
-        borderColor: 'light grey'
+        backgroundColor: '#40E0D0',
+        borderColor: '#40E0D0'
       }
       ]
     },
